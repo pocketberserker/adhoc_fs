@@ -38,6 +38,10 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Argu">
+      <HintPath>..\packages\Argu.2.1\lib\net40\Argu.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Basis.Core">
       <HintPath>..\packages\Basis.Core.1.1.3.0\lib\net40\Basis.Core.dll</HintPath>
       <Private>True</Private>
