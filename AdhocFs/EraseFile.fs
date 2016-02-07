@@ -4,6 +4,7 @@ open System
 open System.IO
 open System.Text
 open System.Threading
+open System.Collections.Generic
 open Basis.Core
 
 [<AutoOpen>]
@@ -86,19 +87,37 @@ type EraseFile(config_: Config) =
     di.MoveTo(Path.Combine(di.Root.FullName, name))
 
   member private this.randomizeContent(di: DirectoryInfo) =
+    let errors = List<string>()
+
+    async {
+      for fi in di.GetFiles() do
+        this.eraseFile fi
+        |> Result.iterFailure (errors.Add)
+    }
+    |> Async.Start
+
+    async {
+      for subdi in di.GetDirectories() do
+        this.eraseDir subdi
+        |> errors.AddRange
+    }
+    |> Async.Start
+
+    errors |> Array.ofSeq
+      (*
     let errors =
       di.GetFiles()
       |> Array.choose (fun fi ->
-        match this.eraseFile fi with
+        match  fi with
         | Success () -> None
         | Failure e -> Some e
-        )
 
     let errors' =
       di.GetDirectories()
       |> Array.collect (this.eraseDir)
 
     Array.append errors errors'
+        )//*)
 
   member this.eraseDir(di: DirectoryInfo) =
     assert (di.Exists)
