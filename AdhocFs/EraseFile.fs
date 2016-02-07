@@ -3,6 +3,7 @@
 open System
 open System.IO
 open System.Text
+open System.Threading
 open Basis.Core
 
 [<AutoOpen>]
@@ -47,16 +48,13 @@ module Random =
         loop (i + 1)
     loop 0
 
-type EraseFile
-  ( ?dirTrash_: string
-  , ?overwriteTimes_: int
-  ) =
-  let dirTrash_       = defaultArg dirTrash_         @"C:\"
-  let overwriteTimes_ = defaultArg overwriteTimes_   3
+type EraseFile(config_: Config) =
+  member private this.timeout() =
+    Thread.Sleep(config_.Timeout)
 
   member private this.moveToTrash(fi: FileInfo) =
     let name = Path.GetRandomFileName()
-    fi.MoveTo(Path.Combine(dirTrash_, name))
+    fi.MoveTo(Path.Combine(config_.TrashDir, name))
 
   member private this.randomizeInfo(fi: FileSystemInfo) =
     let t = Random.nextDateTime ()
@@ -65,12 +63,13 @@ type EraseFile
     fi.LastWriteTimeUtc  <- t
 
   member private this.randomizeContent(fi) =
-    for i in 0..2 do
+    for i in 0..(config_.OverwriteTimes - 1) do
       Random.writeBytesToFile fi
 
   member this.eraseFile(fi: FileInfo) =
     assert (fi.Exists)
     try
+      this.timeout()
       this.moveToTrash(fi)
       this.randomizeContent(fi)
       this.randomizeInfo(fi)
@@ -78,12 +77,12 @@ type EraseFile
       Success ()
     with
     | e -> Failure (sprintf "%s: %s" e.Message fi.FullName)
-    
+
   // FileInfo 版と重複している
   // FileSystemInfo.MoveTo がないせい
   member private this.moveToTrash(di: DirectoryInfo) =
     let name = Path.GetRandomFileName()
-    di.MoveTo(Path.Combine(dirTrash_, name))
+    di.MoveTo(Path.Combine(config_.TrashDir, name))
 
   member private this.randomizeContent(di: DirectoryInfo) =
     let errors =
@@ -103,6 +102,7 @@ type EraseFile
   member this.eraseDir(di: DirectoryInfo) =
     assert (di.Exists)
     try
+      this.timeout()
       this.moveToTrash(di)
       let errors = this.randomizeContent(di)
       if errors |> Array.isEmpty
