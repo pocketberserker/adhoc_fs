@@ -54,7 +54,7 @@ type EraseFile(config_: Config) =
 
   member private this.moveToTrash(fi: FileInfo) =
     let name = Path.GetRandomFileName()
-    fi.MoveTo(Path.Combine(config_.TrashDir, name))
+    fi.MoveTo(Path.Combine(fi.Directory.Root.FullName, name))
 
   member private this.randomizeInfo(fi: FileSystemInfo) =
     let t = Random.nextDateTime ()
@@ -82,7 +82,7 @@ type EraseFile(config_: Config) =
   // FileSystemInfo.MoveTo がないせい
   member private this.moveToTrash(di: DirectoryInfo) =
     let name = Path.GetRandomFileName()
-    di.MoveTo(Path.Combine(config_.TrashDir, name))
+    di.MoveTo(Path.Combine(di.Root.FullName, name))
 
   member private this.randomizeContent(di: DirectoryInfo) =
     let errors =

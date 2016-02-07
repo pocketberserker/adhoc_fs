@@ -10,5 +10,5 @@ let program argv =
 
 [<EntryPoint>]
 let main argv =
-  program [|"-d"; "D:/trash"; "-i"; "D:/trash/sub"|]//argv
+  program [|"-i"; "D:/trash/sub"; "C:/a/b"|]//argv
   0

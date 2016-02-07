@@ -7,8 +7,6 @@ open Argu
 open Basis.Core
 
 type CLIArguments =
-  | [<AltCommandLine("-d")>]
-    Trash_Dir of string
   | [<AltCommandLine("-t")>]
     Timeout of int
   | [<AltCommandLine("-n")>]
@@ -21,7 +19,6 @@ with
   interface IArgParserTemplate with
     member this.Usage =
       match this with
-      | Trash_Dir         _ -> "specify a directory where files are deleted."
       | Timeout           _ -> "set timeout before erasing."
       | Overwrite_Times   _ -> "process multiple times to destroy file content."
       | Force               -> "ignore any errors (by default). set default timeout to 0."
@@ -31,7 +28,6 @@ let clParser =
   ArgumentParser.Create<CLIArguments>()
 
 type Config = {
-  TrashDir          : string
   OverwriteTimes    : int
   Timeout           : int
   Force             : bool
@@ -40,7 +36,6 @@ type Config = {
 with
   static member Default =
     {
-      TrashDir          = @"C:\"
       OverwriteTimes    = 3
       Timeout           = 1000
       Force             = false
@@ -53,8 +48,6 @@ with
 
     let is_forced = results.Contains <@ Force @>
     {
-      TrashDir =
-        results.GetResult(<@ Trash_Dir @>, def.TrashDir)
       OverwriteTimes =
         results.GetResult(<@ Overwrite_Times @>, def.OverwriteTimes)
       Timeout =
