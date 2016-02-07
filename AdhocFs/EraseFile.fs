@@ -50,7 +50,8 @@ module Random =
 
 type EraseFile(config_: Config) =
   member private this.timeout() =
-    Thread.Sleep(config_.Timeout)
+    if config_.Timeout > 0
+    then Thread.Sleep(config_.Timeout)
 
   member private this.moveToTrash(fi: FileInfo) =
     let name = Path.GetRandomFileName()

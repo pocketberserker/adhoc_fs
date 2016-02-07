@@ -21,7 +21,7 @@ with
       match this with
       | Timeout           _ -> "set timeout before erasing."
       | Overwrite_Times   _ -> "process multiple times to destroy file content."
-      | Force               -> "ignore any errors (by default). set default timeout to 0."
+      | Force               -> "skip confirmation and first timeout."
       | Input             _ -> "paths to what you want to erase."
 
 let clParser =
@@ -37,7 +37,7 @@ with
   static member Default =
     {
       OverwriteTimes    = 3
-      Timeout           = 1000
+      Timeout           = 0
       Force             = false
       InputPaths        = []
     }
