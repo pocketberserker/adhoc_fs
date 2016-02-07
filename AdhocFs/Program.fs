@@ -9,7 +9,8 @@ let program argv =
     if config.Force
     then true
     else
-      printfn "Would you like erase those files? (NOT undoable) (Y/n)"
+      printfn "Would you like erase these files? (NOT undoable) (Y/n)"
+      paths |> List.iter (printfn "%s")
       Console.ReadLine() = "Y"
 
   let perform () =
