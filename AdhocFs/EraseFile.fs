@@ -16,6 +16,15 @@ module Misc =
     elif Directory.Exists(path) then Dir  (DirectoryInfo(path))
     else NotExist
 
+module Async =
+  let ParallelCollect ss =
+    ss
+    |> Async.Parallel
+    |> (fun ss -> async {
+        let! vs = ss
+        return vs |> Seq.concat
+      })
+
 module Random =
   let rng = Random()
 
@@ -87,37 +96,28 @@ type EraseFile(config_: Config) =
     di.MoveTo(Path.Combine(di.Root.FullName, name))
 
   member private this.randomizeContent(di: DirectoryInfo) =
-    let errors = List<string>()
-
-    async {
-      for fi in di.GetFiles() do
-        this.eraseFile fi
-        |> Result.iterFailure (errors.Add)
-    }
-    |> Async.Start
-
-    async {
-      for subdi in di.GetDirectories() do
-        this.eraseDir subdi
-        |> errors.AddRange
-    }
-    |> Async.Start
-
-    errors |> Array.ofSeq
-      (*
-    let errors =
+    let eraseFiles =
       di.GetFiles()
-      |> Array.choose (fun fi ->
-        match  fi with
-        | Success () -> None
-        | Failure e -> Some e
+      |> Array.map (fun fi -> async {
+            return
+              this.eraseFile fi
+              |> Result.toOptionFailure
+              |> Option.toArray
+          })
+      |> Async.ParallelCollect
 
-    let errors' =
+    let eraseDirs =
       di.GetDirectories()
-      |> Array.collect (this.eraseDir)
+      |> Array.map (fun subdi -> async {
+            return
+              this.eraseDir subdi
+          })
+      |> Async.ParallelCollect
 
-    Array.append errors errors'
-        )//*)
+    [eraseFiles; eraseDirs]
+    |> Async.ParallelCollect
+    |> Async.RunSynchronously
+    |> Seq.toArray
 
   member this.eraseDir(di: DirectoryInfo) =
     assert (di.Exists)
