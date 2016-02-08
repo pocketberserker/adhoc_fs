@@ -131,7 +131,7 @@ type EraseFile(config_: Config) =
             di.Delete()
           )
     with
-    | e -> [| e.Message |]
+    | e -> [| (sprintf "%s: %s" e.Message di.FullName) |]
 
   member this.erase(path: string) =
     match path with
