@@ -2,7 +2,10 @@
 open System.Threading
 open EraseFile
 
-let program argv =
+[<EntryPoint>]
+let main argv =
+  //let argv = [|"-i"; "D:/trash/sub"; "C:/a/b"|]
+
   let config = Config.Create(argv)
   let eraser = EraseFile(config)
   let paths = config.InputPaths
@@ -23,8 +26,4 @@ let program argv =
 
   if confirm ()
   then perform ()
-
-[<EntryPoint>]
-let main argv =
-  program [|"-i"; "D:/trash/sub"; "C:/a/b"|]//argv
   0
