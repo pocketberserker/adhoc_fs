@@ -81,9 +81,9 @@ type EraseFile(config_: Config) =
     assert (fi.Exists)
     try
       this.timeout()
-      this.moveToTrash(fi)
       this.randomizeContent(fi)
       this.randomizeInfo(fi)
+      this.moveToTrash(fi)
       fi.Delete()
       Success ()
     with
@@ -123,11 +123,11 @@ type EraseFile(config_: Config) =
     assert (di.Exists)
     try
       this.timeout()
-      this.moveToTrash(di)
       let errors = this.randomizeContent(di)
       if errors |> Array.isEmpty
       then
         this.randomizeInfo(di)
+        this.moveToTrash(di)
         di.Delete()
         [||]
       else
