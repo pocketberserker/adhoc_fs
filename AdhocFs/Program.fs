@@ -14,12 +14,12 @@ let program argv =
       printfn "Would you like erase these files? (NOT undoable) (Y/n)"
       paths |> List.iter (printfn "%s")
       Console.ReadLine() = "Y"
-      |> tap (fun ok -> if ok then Threading.Thread.Sleep(3000))
+      |> tap (fun ok -> if ok then Thread.Sleep(3000))
 
   let perform () =
     for path in paths do
       eraser.erase(path)
-      |> Array.iter (Console.Error.WriteLine)
+      |> Array.iter (eprintfn "%s")
 
   if confirm ()
   then perform ()

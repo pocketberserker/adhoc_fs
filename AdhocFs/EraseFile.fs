@@ -123,24 +123,22 @@ type EraseFile(config_: Config) =
     assert (di.Exists)
     try
       this.timeout()
-      let errors = this.randomizeContent(di)
-      if errors |> Array.isEmpty
-      then
-        this.randomizeInfo(di)
-        this.moveToTrash(di)
-        di.Delete()
-        [||]
-      else
-        errors
+      this.randomizeContent(di)
+      |> tap (fun errors ->
+          if errors |> Array.isEmpty then
+            this.randomizeInfo(di)
+            this.moveToTrash(di)
+            di.Delete()
+          )
     with
     | e -> [| e.Message |]
 
   member this.erase(path: string) =
     match path with
     | File fi ->
-        match this.eraseFile(fi) with
-        | Success () -> [||]
-        | Failure e -> [|e|]
+        this.eraseFile(fi)
+        |> Result.toOptionFailure
+        |> Option.toArray
     | Dir di ->
         this.eraseDir(di)
     | NotExist ->
