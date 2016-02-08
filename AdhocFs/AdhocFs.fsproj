@@ -8,7 +8,7 @@
     <ProjectGuid>24ac5af1-d512-4c1d-a87d-98df269c7523</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>AdhocFs</RootNamespace>
-    <AssemblyName>AdhocFs</AssemblyName>
+    <AssemblyName>eraseFile</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.3.1.0</TargetFSharpCoreVersion>
