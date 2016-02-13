@@ -47,6 +47,8 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.fs" />
+    <Compile Include="Util.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
   </ItemGroup>
