@@ -74,6 +74,11 @@ let chunkByLWT paths =
         (lwt - lwtPrev) <= (config.Threshold)
       )
 
+let commitMessageFromChunk paths =
+  if paths |> Seq.length = 1
+  then sprintf "Add %s" (paths |> Seq.exactlyOne |> Path.GetFileName)
+  else "Add untracked files"
+
 let dateStrFromChunk dates =
   let date =
       DateTime.middle
@@ -90,7 +95,7 @@ let commitChunk (dates, (paths: #seq<string>)) =
   |> ignore
 
   sprintf "commit -m \"%s\" --date=\"%s\""
-    "Add untracked file"
+    (paths |> commitMessageFromChunk)
     (dates |> dateStrFromChunk)
   |> Git.exec
   |> ignore
