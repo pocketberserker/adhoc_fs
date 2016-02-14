@@ -37,7 +37,7 @@ module Git =
     let doMerge () =
         sprintf "merge %s --no-ff -m \"Merge into %s: Add untracked files\""
           tempBranchName
-          tempBranchName
+          prevBranchName
         |> execIgnore
 
     let eraseTempBranch () =
