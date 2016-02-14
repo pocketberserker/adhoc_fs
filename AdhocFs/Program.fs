@@ -15,6 +15,21 @@ module Git =
 
   let execIgnore = exec >> ignore
 
+  let isInsideWorkTree () =
+    exec "rev-parse --is-inside-work-tree"
+    |> Option.get
+    |> Seq.head
+    |> (=) "true"
+
+  let goToRoot () =
+    exec "rev-parse --show-cdup"
+    |> Option.get
+    |> Seq.head
+    |> if' ((<>) "") (fun relPath ->
+        let path = Path.Combine(Environment.CurrentDirectory, relPath)
+        Environment.CurrentDirectory <- path
+        )
+
   let workOnNewBranch f =
 
     let prevBranchName =
@@ -101,6 +116,11 @@ let commitChunk (dates, (paths: #seq<string>)) =
   |> ignore
 
 let main_impl () =
+  if Git.isInsideWorkTree () |> not
+  then failwith "Must be inside of git work tree"
+
+  Git.goToRoot ()
+
   let paths =
       enumUntrackedFiles ()
       |> Seq.filter (File.isHiddenOrSystem >> not)
