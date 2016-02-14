@@ -11,7 +11,7 @@ module Misc =
   let tap f x = f x; x
 
   let if' pred f x =
-    if pred x then f ()
+    if pred x then f x
 
 module Seq =
   let unzip self =

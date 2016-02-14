@@ -21,7 +21,7 @@ module Git =
         exec "rev-parse --abbrev-ref HEAD"
         |> Option.get
         |> Seq.head
-        |> tap (if' ((=) "HEAD") (fun () ->
+        |> tap (if' ((=) "HEAD") (fun _ ->
             failwith "HEAD must be a branch."
             ))
 
@@ -104,7 +104,7 @@ let main_impl () =
   let paths =
       enumUntrackedFiles ()
       |> Seq.filter (File.isHiddenOrSystem >> not)
-      |> tap (if' (Seq.isEmpty) (fun () -> failwith "No target files."))
+      |> tap (if' (Seq.isEmpty) (fun _ -> failwith "No target files."))
 
   Git.workOnNewBranch (fun () ->
       paths
