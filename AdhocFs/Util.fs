@@ -51,6 +51,14 @@ module Str =
   let splitWith (s: string) (self: string) =
     self.Split([| s |], StringSplitOptions.RemoveEmptyEntries)
 
+module TextReader =
+  let readLineAll (self: TextReader) =
+    Seq.unfold (fun () ->
+      match self.ReadLine() with
+      | null -> None
+      | line -> Some (line, ())
+      ) ()
+
 module Diagnostics =
   let execCmdline timeout verb arg =
     let psi =
@@ -64,5 +72,5 @@ module Diagnostics =
         )
     use p = Process.Start(psi)
     if p.WaitForExit(timeout)
-    then Some (p.StandardOutput.ReadToEnd())
+    then Some (p.StandardOutput |> TextReader.readLineAll)
     else None

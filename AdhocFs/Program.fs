@@ -20,6 +20,7 @@ module Git =
     let prevBranchName =
         exec "rev-parse --abbrev-ref HEAD"
         |> Option.get
+        |> Seq.head
         |> tap (if' ((=) "HEAD") (fun () ->
             failwith "HEAD must be a branch."
             ))
@@ -55,8 +56,7 @@ module Git =
 let enumUntrackedFiles () =
   Git.exec "status --porcelain --untracked-files=all"
   |> Option.get // or raise
-  |> Str.splitWith (Environment.NewLine)
-  |> Array.choose (fun line ->
+  |> Seq.choose (fun line ->
       if (line |> String.length) > 3 && line.StartsWith("??")
       then Some (line.Substring(3))
       else None
@@ -64,8 +64,8 @@ let enumUntrackedFiles () =
 
 let chunkByLWT paths =
   paths
-  |> Array.map (fun path -> (File.GetLastWriteTimeUtc(path), path))
-  |> Array.sort
+  |> Seq.map (fun path -> (File.GetLastWriteTimeUtc(path), path))
+  |> Seq.sort
   |> Seq.chunk (fun chunk (lwt, path) ->
       if chunk |> Seq.isEmpty
       then true
@@ -103,8 +103,8 @@ let commitChunk (dates, (paths: #seq<string>)) =
 let main_impl () =
   let paths =
       enumUntrackedFiles ()
-      |> Array.filter (File.isHiddenOrSystem >> not)
-      |> tap (if' (Array.isEmpty) (fun () -> failwith "No target files."))
+      |> Seq.filter (File.isHiddenOrSystem >> not)
+      |> tap (if' (Seq.isEmpty) (fun () -> failwith "No target files."))
 
   Git.workOnNewBranch (fun () ->
       paths
