@@ -4,6 +4,7 @@ open System
 open System.Collections.Generic
 open System.Diagnostics
 open System.IO
+open System.Text
 
 [<AutoOpen>]
 module Misc =
@@ -58,6 +59,8 @@ module Diagnostics =
         , Arguments = arg
         , CreateNoWindow = true
         , UseShellExecute = false
+        , RedirectStandardOutput = true
+        , StandardOutputEncoding = Encoding.UTF8
         )
     use p = Process.Start(psi)
     if p.WaitForExit(timeout)
