@@ -136,7 +136,9 @@ let main_impl () =
 [<EntryPoint>]
 let main _ =
   try
-    main_impl ()
+    (main_impl
+    |> Environment.preserveCurDir
+    ) ()
   with
   | e ->
       eprintfn "%s" (e.Message)

@@ -74,3 +74,11 @@ module Diagnostics =
     if p.WaitForExit(timeout)
     then Some (p.StandardOutput |> TextReader.readLineAll)
     else None
+
+module Environment =
+  let preserveCurDir f () =
+    let curDir = Environment.CurrentDirectory
+    try
+      f ()
+    finally
+      Environment.CurrentDirectory <- curDir
