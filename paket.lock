@@ -1,6 +1,8 @@
-NUGET
-  remote: https://www.nuget.org/api/v2
+
+GITHUB
+  remote: gmpl/FsControl
   specs:
-    FsControl (1.0.13)
-    FSharpPlus (0.0.4)
-      FsControl (>= 1.0.9)
+    FULLPROJECT (73b2e1b4431172371ea803a268ff4007da559af9)
+  remote: gmpl/FSharpPlus
+  specs:
+    FULLPROJECT (e9b82a0dbcdd3a6019efb3d6f16759f9baeabb64)

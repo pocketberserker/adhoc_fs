@@ -39,12 +39,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FsControl.Core">
-      <HintPath>..\packages\FsControl\lib\net40\FsControl.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharpPlus">
-      <HintPath>..\packages\FSharpPlus\lib\net40\FSharpPlus.dll</HintPath>
-    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
@@ -56,6 +50,23 @@
   <ItemGroup>
     <Compile Include="Program.fs" />
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\paket-files\gmpl\FsControl\FsControl.BaseLib\FsControl.BaseLib.csproj">
+      <Name>FsControl.BaseLib</Name>
+      <Project>{1b99df98-65ac-4038-8be5-e72b0882f420}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\paket-files\gmpl\FsControl\FsControl.Core\FsControl.Core.fsproj">
+      <Name>FsControl.Core</Name>
+      <Project>{92eb1018-06de-4300-8daa-047f4f53c2b9}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\paket-files\gmpl\FSharpPlus\FSharpPlus\FSharpPlus.fsproj">
+      <Name>FSharpPlus</Name>
+      <Project>{78496e9f-6072-4287-8415-86b4b6628c36}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
