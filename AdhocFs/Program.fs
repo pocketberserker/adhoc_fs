@@ -1,7 +1,11 @@
-﻿open System
+namespace AdhocFs
 
-[<EntryPoint>]
-let main argv =
+open System
 
-  // exit code
-  0
+module Program =
+  [<EntryPoint>]
+  let main argv = 
+    printfn "%A" argv
+
+    // exit code
+    0
